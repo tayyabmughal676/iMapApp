@@ -10,11 +10,9 @@ import SwiftUI
 struct LocationsListView: View {
     
     @EnvironmentObject private var vm: LocationViewModel
-    
     var body: some View {
         List{
             ForEach(vm.locations) { location in
-                
                 Button {
                     vm.showNextLocation(location: location)
                 } label: {
@@ -35,9 +33,7 @@ struct LocationsListView_Previews: PreviewProvider {
     }
 }
 
-
 extension LocationsListView{
-    
     private func listRowView(location: Location) -> some View{
         HStack{
             if let imageName = location.imageNames.first {
