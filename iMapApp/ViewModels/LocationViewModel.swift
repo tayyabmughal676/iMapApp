@@ -19,7 +19,7 @@ class LocationViewModel : ObservableObject{
     //    Current location on map
     @Published var mapLocation: Location {
         didSet{
-//            Everytime when the location change, map will be update automatically
+            //            Everytime when the location change, map will be update automatically
             updateMapRegion(location: mapLocation)
         }
     }
@@ -41,7 +41,7 @@ class LocationViewModel : ObservableObject{
         self.updateMapRegion(location: locations.first!)
     }
     
-//    Update Map
+    //    Update Map
     private func updateMapRegion(location: Location){
         withAnimation(.easeInOut){
             mapRegion = MKCoordinateRegion(
@@ -60,8 +60,31 @@ class LocationViewModel : ObservableObject{
     func showNextLocation(location: Location){
         withAnimation(.easeInOut){
             mapLocation = location
-            showLocationsList = false 
+            showLocationsList = false
         }
+    }
+    
+    func nextButtonPressed(){
+        
+        //        Get the current index
+        guard let currentIndex = locations.firstIndex(where: {$0 == mapLocation}) else{
+            print("Could not find current index in locations array! Should never happen.")
+            return
+        }
+        
+        //         Check if the nextIndex is valid
+        let nextIndex = currentIndex + 1
+        guard locations.indices.contains(nextIndex) else{
+            //            Next index is NOT valid
+            //            Restart from 0
+            guard let firstLocation = locations.first else {return }
+            showNextLocation(location: firstLocation)
+            return
+        }
+        
+        //        Next Index IS valid
+        let nextLocation = locations[nextIndex]
+        showNextLocation(location: nextLocation)
     }
     
 }

@@ -11,15 +11,28 @@ import MapKit
 struct LocationView: View {
     
     @EnvironmentObject private var vm: LocationViewModel
-    
     var body: some View {
         ZStack{
             Map(coordinateRegion: $vm.mapRegion)
                 .ignoresSafeArea()
-            
             VStack(spacing:0){
                 header.padding()
                 Spacer()
+                ZStack{
+                    ForEach(vm.locations){ location in
+                        if vm.mapLocation == location{
+                            LocationPreviewView(location: location)
+                                .shadow(
+                                    color: Color.black.opacity(0.3),
+                                    radius: 20.0
+                                )
+                                .padding()
+                                .transition(
+                                    .asymmetric(
+                                        insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                        }
+                    }
+                }
             }
         }
     }
@@ -46,7 +59,6 @@ extension LocationView{
                     .frame(height: 55.0)
                     .frame(maxWidth: .infinity)
                     .animation(.none, value: vm.mapLocation)
-    //                .background(Color.red)
                     .overlay(alignment: .leading) {
                         Image(systemName: "arrow.down")
                             .font(.headline)
@@ -55,13 +67,9 @@ extension LocationView{
                             .rotationEffect(Angle(degrees: vm.showLocationsList ? 180: 0))
                     }
             }
-
-            
             if vm.showLocationsList{
                 LocationsListView()
             }
-            
-            
         }
         .background(.thickMaterial)
         .cornerRadius(10)
