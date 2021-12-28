@@ -11,15 +11,22 @@ import MapKit
 struct LocationView: View {
     
     @EnvironmentObject private var vm: LocationViewModel
+    let maxWidthForIPad: CGFloat = 700
+
     var body: some View {
         ZStack{
             mapLayer
                 .ignoresSafeArea()
             VStack(spacing:0){
-                header.padding()
+                header
+                    .padding()
+                    .frame(maxWidth: maxWidthForIPad)
                 Spacer()
                 locationPreviewStack
             }
+        }
+        .sheet(item: $vm.sheetLocation, onDismiss: nil) { location in
+            LocationDetailView(location: location)
         }
     }
 }
@@ -95,9 +102,14 @@ extension LocationView{
                             radius: 20.0
                         )
                         .padding()
+                        .frame(maxWidth: maxWidthForIPad)
+//                        .background(Color.orange)
+                        .frame(maxWidth: .infinity)
+//                        .background(Color.green)
                         .transition(
                             .asymmetric(
-                                insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                                insertion: .move(edge: .trailing),
+                                removal: .move(edge: .leading)))
                 }
             }
         }
